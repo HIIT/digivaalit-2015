@@ -33,7 +33,9 @@ def _reclean( candidate, field, cleaners, invalids ):
 
 
 _clean_twitter = re.compile('((http)?[s]?(://)?(www.)?twitter(.com)?/|@)' , re.IGNORECASE )
+_clean_facebook = re.compile('(http)?[s]?(://)?(www.)?facebook.com/(pages/)?' , re.IGNORECASE )
 _clean_slash = re.compile('/')
+_clean_refs = re.compile('\?(f)?ref=[a-z]*')
 
 input = xlrd.open_workbook( sys.argv[1] ).sheets()[0]
 
@@ -50,6 +52,9 @@ for row in range( 1 , input.nrows ):
 
     ## clean urls from data
     _reclean( candidate, 'twitter' , [ _clean_twitter , _clean_slash ], ['www.', 'http'] )
+    _reclean( candidate, 'facebook' , [ _clean_facebook , _clean_slash, _clean_refs ], ['www.', 'http'] )
+
+    print candidate['facebook']
 
     data.append( candidate )
 
