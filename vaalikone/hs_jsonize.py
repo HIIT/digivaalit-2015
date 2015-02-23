@@ -16,6 +16,22 @@ def _clean( value , empty):
             return None
         return value
 
+def _reclean( candidate, field, cleaners, invalids ):
+
+    if candidate[ field ]:
+
+        for cleaner in cleaners:
+            candidate[ field ] = cleaner.sub( '' , candidate[ field ] )
+
+        for invalid in invalids:
+            if invalid in candidate[ field ]:
+                candidate[ field ] = None
+                return
+
+        if candidate[ field ] == '':
+            candidate[ field ] = None
+
+
 _clean_twitter = re.compile('((http)?[s]?(://)?(www.)?twitter(.com)?/|@)' , re.IGNORECASE )
 _clean_slash = re.compile('/')
 
@@ -33,13 +49,7 @@ for row in range( 1 , input.nrows ):
             candidate[ header ] = _clean( input.cell( row, column ).value, ['', '-', 'NULL'] )
 
     ## clean urls from data
-    if candidate[ 'twitter' ]:
-        candidate[ 'twitter' ] = _clean_twitter.sub( '', candidate[ 'twitter' ] )
-        candidate[ 'twitter' ] = _clean_slash.sub( '', candidate['twitter'] )
-
-        ## urgh urgh
-        if candidate[ 'twitter' ] == '' or 'http' in candidate['twitter'] or 'www.' in candidate['twitter']:
-            candidate[ 'twitter' ] = None
+    _reclean( candidate, 'twitter' , [ _clean_twitter , _clean_slash ], ['www.', 'http'] )
 
     data.append( candidate )
 
