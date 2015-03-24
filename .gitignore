@@ -1,3 +1,7 @@
+## don't submit keys
+
+./twitter/secrets.py
+
 ## customs
 
 outputs/
