@@ -7,6 +7,15 @@ import bs4
 import re
 import datetime
 
+import tweepy
+from secrets import *
+
+import time
+
+auth = tweepy.OAuthHandler(ConsumerKey,ConsumerSecret)
+auth.set_access_token(AccessTokenKey,AccessTokenSecret)
+twitter = tweepy.API(auth)
+
 match_id = '.*/([0-9]+)'
 
 def _collect_ids( username , date ):
@@ -46,11 +55,23 @@ def collect_tweets( username, since, until ):
         tweets += _collect_ids( username, date )
         date = date + datetime.timedelta( 1 )
 
-        print date
+    ret = []
 
-    return tweets
+    for tweet in tweets:
 
+        t = None
 
+        while not t:
+            
+            try:
+                t = twitter.get_status( tweet )._json
+            except tweepy.error.TweepError:
+                time.sleep( 60 * 5 ) ## wait for ratelimit to come back
+
+        ret.append( t )
+
+    return ret
 
 if __name__ == '__main__':
-    print len( collect_tweets( 'Jyrkikasvi', datetime.date( 2011, 1, 1 ), datetime.date( 2011, 1, 31 ) ) )
+    for t in collect_tweets( 'Jyrkikasvi', datetime.date( 2011, 1, 1 ), datetime.date( 2011, 1, 15 ) ):
+        print t['text'].encode('utf8')
