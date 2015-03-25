@@ -24,23 +24,33 @@ def _collect_ids( username , date ):
 
     url = 'https://mobile.twitter.com/search?src=typd&q=from:' + username + ' since:' + date.isoformat() + ' until:' + date2.isoformat()
 
-    r = requests.get( url )
-
-    page = bs4.BeautifulSoup( r.text )
-
     ret = []
 
-    for tweet in page.find( class_ ='timeline' ).children:
+    while True:
 
-        if isinstance( tweet , bs4.Tag ):
+        r = requests.get( url )
 
-            ## get tweet ID
-            if 'href' in tweet.attrs:
-                href = tweet['href']
-                href = re.search( match_id, href )
-                ret.append( (int)( href.group(1) ) )
+        page = bs4.BeautifulSoup( r.text )
 
-            ## TODO: check if count > 19; then need to parse more
+        count = 0
+
+        for tweet in page.find( class_ ='timeline' ).children:
+
+            if isinstance( tweet , bs4.Tag ):
+
+                ## get tweet ID
+                if 'href' in tweet.attrs:
+                    href = tweet['href']
+                    href = re.search( match_id, href )
+                    ret.append( (int)( href.group(1) ) )
+                    count += 1
+
+        if count < 20: ## per page, max 20 tweets
+            break
+
+        ## move to next page
+        url = 'https://mobile.twitter.com/' + page.find( class_ = 'w-button-more' ).find('a')['href']
+
 
     return ret
 
@@ -52,7 +62,11 @@ def collect_tweets( username, since, until ):
 
     while date <= until:
 
+        if len( _collect_ids( username, date ) ) >= 19:
+            print date, len( _collect_ids( username, date ) )
+
         tweets += _collect_ids( username, date )
+
         date = date + datetime.timedelta( 1 )
 
     ret = []
@@ -73,5 +87,6 @@ def collect_tweets( username, since, until ):
     return ret
 
 if __name__ == '__main__':
-    for t in collect_tweets( 'Jyrkikasvi', datetime.date( 2011, 1, 1 ), datetime.date( 2011, 1, 15 ) ):
-        print t['text'].encode('utf8')
+    print len( _collect_ids( 'alexstubb' , datetime.date( 2011, 4, 16 ) ) )
+    # for t in collect_tweets( 'alexstubb', datetime.date( 2011, 1, 1 ), datetime.date( 2015, 3, 25 ) ):
+    #    print t['text'].encode('utf8')
