@@ -22,7 +22,7 @@ def _collect_ids( username , date ):
 
     date2 = date + datetime.timedelta( 1 )
 
-    url = 'https://mobile.twitter.com/search?src=typd&q=from%3A' + username + '%20since%3A' + date.isoformat() + '%20until%3A' + date2.isoformat()
+    url = 'https://mobile.twitter.com/search?src=typd&q=from:' + username + ' since:' + date.isoformat() + ' until:' + date2.isoformat()
 
     r = requests.get( url )
 
@@ -62,7 +62,7 @@ def collect_tweets( username, since, until ):
         t = None
 
         while not t:
-            
+
             try:
                 t = twitter.get_status( tweet )._json
             except tweepy.error.TweepError:
