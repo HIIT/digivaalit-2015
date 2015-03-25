@@ -1,6 +1,7 @@
 import feedparser
 import pickle
 import requests
+import sys
 
 hub = "http://feeds.feedburner.com/ampparit-politiikka" ## collect from ampparit all politics related sites
 
@@ -8,14 +9,14 @@ feed = feedparser.parse( hub )
 
 stored = []
 
+path = sys.argv[0]
+
 try:
-    stored = pickle.load( open( '.history' , 'r' ) )
+    stored = pickle.load( open(  path  + '/.history' , 'r' ) )
 except:
     pass
 
-stored = []
-
-out = open( 'urls.txt' , 'a')
+out = open( path + '/urls.txt' , 'a')
 
 for item in feed['items']:
 
@@ -32,4 +33,4 @@ for item in feed['items']:
 
         stored.append( _id )
 
-pickle.dump( stored, open( '.history' , 'w' ) )
+pickle.dump( stored, open( path + '/.history' , 'w' ) )
