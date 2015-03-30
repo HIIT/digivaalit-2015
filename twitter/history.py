@@ -51,6 +51,7 @@ def _collect_ids( username , date ):
         ## move to next page
         url = 'https://mobile.twitter.com/' + page.find( class_ = 'w-button-more' ).find('a')['href']
 
+    print username, date, count
 
     return ret
 
@@ -61,9 +62,6 @@ def collect_tweets( username, since, until ):
     tweets = []
 
     while date <= until:
-
-        if len( _collect_ids( username, date ) ) >= 19:
-            print date, len( _collect_ids( username, date ) )
 
         tweets += _collect_ids( username, date )
 
@@ -87,6 +85,5 @@ def collect_tweets( username, since, until ):
     return ret
 
 if __name__ == '__main__':
-    print len( _collect_ids( 'alexstubb' , datetime.date( 2011, 4, 16 ) ) )
-    # for t in collect_tweets( 'alexstubb', datetime.date( 2011, 1, 1 ), datetime.date( 2015, 3, 25 ) ):
-    #    print t['text'].encode('utf8')
+    for t in collect_tweets( 'alexstubb', datetime.date( 2011, 4, 16 ), datetime.date( 2014, 3, 29 ) ):
+        print t['text'].encode('utf8')
