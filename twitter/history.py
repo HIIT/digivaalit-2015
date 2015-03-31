@@ -34,11 +34,14 @@ def _collect_ids( username , date ):
 
         count = 0
 
+        if not page.find( class_ ='timeline' ):
+	    break
+
         for tweet in page.find( class_ ='timeline' ).children:
 
-            if isinstance( tweet , bs4.Tag ):
+	   if isinstance( tweet , bs4.Tag ):
 
-                ## get tweet ID
+         	## get tweet ID
                 if 'href' in tweet.attrs:
                     href = tweet['href']
                     href = re.search( match_id, href )
@@ -50,8 +53,6 @@ def _collect_ids( username , date ):
 
         ## move to next page
         url = 'https://mobile.twitter.com/' + page.find( class_ = 'w-button-more' ).find('a')['href']
-
-    print username, date, count
 
     return ret
 
