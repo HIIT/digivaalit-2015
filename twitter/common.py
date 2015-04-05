@@ -1,4 +1,6 @@
 import tweepy
+import time
+
 from secrets import *
 
 auth = tweepy.OAuthHandler(ConsumerKey,ConsumerSecret)
