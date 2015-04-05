@@ -12,7 +12,7 @@ def nouda( url , out ):
 	teksti = soup.find_all( id="article-text-content" )
 	for e in teksti[0]:
 		if isinstance( e, bs4.element.Tag):
-			if not e.get('class'):
+			if not e.get('class') and e.string:
 				out.write( e.string.encode('utf8') + '\n' )
 
 if __name__ == '__main__':
