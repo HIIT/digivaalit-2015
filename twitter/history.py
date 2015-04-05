@@ -7,14 +7,9 @@ import bs4
 import re
 import datetime
 
-import tweepy
-from secrets import *
+from common import *
 
 import time
-
-auth = tweepy.OAuthHandler(ConsumerKey,ConsumerSecret)
-auth.set_access_token(AccessTokenKey,AccessTokenSecret)
-twitter = tweepy.API(auth)
 
 match_id = '.*/([0-9]+)'
 
@@ -34,11 +29,14 @@ def _collect_ids( username , date ):
 
         count = 0
 
+        if not page.find( class_ ='timeline' ):
+	    break
+
         for tweet in page.find( class_ ='timeline' ).children:
 
-            if isinstance( tweet , bs4.Tag ):
+	   if isinstance( tweet , bs4.Tag ):
 
-                ## get tweet ID
+         	## get tweet ID
                 if 'href' in tweet.attrs:
                     href = tweet['href']
                     href = re.search( match_id, href )
@@ -51,9 +49,9 @@ def _collect_ids( username , date ):
         ## move to next page
         url = 'https://mobile.twitter.com/' + page.find( class_ = 'w-button-more' ).find('a')['href']
 
-    print username, date, count
+    print username, date, len( ret )
 
-    return ret
+    return tweets( ret )
 
 def collect_tweets( username, since, until ):
 
@@ -67,23 +65,8 @@ def collect_tweets( username, since, until ):
 
         date = date + datetime.timedelta( 1 )
 
-    ret = []
-
-    for tweet in tweets:
-
-        t = None
-
-        while not t:
-
-            try:
-                t = twitter.get_status( tweet )._json
-            except tweepy.error.TweepError:
-                time.sleep( 60 * 5 ) ## wait for ratelimit to come back
-
-        ret.append( t )
-
-    return ret
+    return tweets
 
 if __name__ == '__main__':
-    for t in collect_tweets( 'alexstubb', datetime.date( 2011, 4, 16 ), datetime.date( 2014, 3, 29 ) ):
+    for t in collect_tweets( 'alexstubb', datetime.date( 2011, 4, 16 ), datetime.date( 2011, 4, 29 ) ):
         print t['text'].encode('utf8')
