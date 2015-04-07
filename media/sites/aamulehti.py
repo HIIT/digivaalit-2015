@@ -9,7 +9,6 @@ soup = BeautifulSoup( r.text )
 teksti = soup.find_all( class_='Teksti' )
 
 for i in teksti:
-    print i
 
 i.contents[0]
 
