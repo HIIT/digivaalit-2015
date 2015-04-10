@@ -1,8 +1,14 @@
 import requests
+import datetime
+import time
 
 from bs4 import BeautifulSoup
 
 def nouda( out ):
+
+	laskuri = []
+
+	print "Today(vuosi, kuukausi, paiva): ", datetime.date.today()
 
 	paiva = raw_input("Paiva: ")
 	kuukausi = raw_input("Kuukausi: ")
@@ -36,11 +42,15 @@ def nouda( out ):
 
 		for teksti in soup.find_all( class_='ingress' ):
 
-			for string in teksti:
-	        		out.write(repr(string))
+			a = teksti.find('a').get('href')
+				
+			if a not in laskuri:
+				laskuri.append(a)
 
 		paiva_num = paiva_num - 1
 
+	out.write(repr(laskuri))
+	
 if __name__ == '__main__':
 	
 	nouda("http://www.aamulehti.fi/Kotimaa/1194924055819/artikkeli/eduskuntavaalit+2015.html", file('linkki.txt', 'w'))
