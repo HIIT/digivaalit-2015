@@ -39,6 +39,7 @@ import helsinginuutiset
 
 import linkki_aamulehti
 import ylilauta
+import linkki_iltasanomat
 
 from bs4 import BeautifulSoup
 
@@ -209,9 +210,8 @@ while a == False:
 			print("Error sivua ei voitu kirjoittaa tai koodi ei toimi urlin kanssa.")
 
 	elif haku_num == 2:
-
 		print ("Sivut jotka toimii: \n")
-		print ("|aamulehti|	|ylilauta(kommentteja)|\n")
+		print ("|aamulehti|     |ylilauta(kommentteja)|     |iltasanomat|\n")
 
 		nimi = raw_input('Sivun nimi: ')
 
@@ -231,6 +231,12 @@ while a == False:
 		elif nimi == "ylilauta":		
 
 			ylilauta.nouda(file(txt, 'w'))
+
+			print(nimi + ":\n" + "Kirjoitus onnistui")
+
+		elif nimi == "iltasanomat":		
+
+			linkki_iltasanomat.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
