@@ -36,10 +36,13 @@ import ts
 import faktabaari
 import tiedonantaja
 import helsinginuutiset
+import esaimaa
 
 import linkki_aamulehti
 import ylilauta
 import linkki_iltasanomat
+import linkki_satakunnankansa
+import linkki_esaimaa
 
 from bs4 import BeautifulSoup
 
@@ -206,14 +209,18 @@ while a == False:
 			helsinginuutiset.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
 
+		elif b == "esaimaa":
+			esaimaa.nouda(add, file(txt, 'w'))
+			print(b + ":\n" + "Kirjoitus onnistui")
+
 		else: 
 			print("Error sivua ei voitu kirjoittaa tai koodi ei toimi urlin kanssa.")
 
 	elif haku_num == 2:
 		print ("Sivut jotka toimii: \n")
-		print ("|aamulehti|     |ylilauta(kommentteja)|     |iltasanomat|\n")
+		print ("|Aamulehti|     |Ylilauta(kommentteja)|     |Iltasanomat|     |Satakunnankansa|\n|Etela saimaa|\n")
 
-		nimi = raw_input('Sivun nimi: ')
+		nimi = raw_input('Sivun nimi: ').lower()
 
 		txt = raw_input('Tiedoston nimi(esim yle.txt): ')
 
@@ -237,6 +244,18 @@ while a == False:
 		elif nimi == "iltasanomat":		
 
 			linkki_iltasanomat.nouda(file(txt, 'w'))
+
+			print(nimi + ":\n" + "Kirjoitus onnistui")
+
+		elif nimi == "satakunnankansa":		
+
+			linkki_satakunnankansa.nouda(file(txt, 'w'))
+
+			print(nimi + ":\n" + "Kirjoitus onnistui")
+
+		elif nimi == "etela saimaa":		
+
+			linkki_esaimaa.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
