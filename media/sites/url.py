@@ -1,5 +1,6 @@
 import requests
 
+#Uutistenhaku linkeilla
 import yle
 import aamulehti
 import ess
@@ -38,11 +39,14 @@ import tiedonantaja
 import helsinginuutiset
 import esaimaa
 
+
+#Linkkien haku uutissivuilta
 import linkki_aamulehti
 import ylilauta
 import linkki_iltasanomat
 import linkki_satakunnankansa
 import linkki_esaimaa
+import linkki_karjalainen
 
 from bs4 import BeautifulSoup
 
@@ -218,7 +222,7 @@ while a == False:
 
 	elif haku_num == 2:
 		print ("Sivut jotka toimii: \n")
-		print ("|Aamulehti|     |Ylilauta(kommentteja)|     |Iltasanomat|     |Satakunnankansa|\n|Etela saimaa|\n")
+		print ("|Aamulehti|     |Ylilauta(kommentteja)|     |Iltasanomat|     |Satakunnankansa|\n|Etela saimaa|  |Karjalainen|\n")
 
 		nimi = raw_input('Sivun nimi: ').lower()
 
@@ -256,6 +260,12 @@ while a == False:
 		elif nimi == "etela saimaa":		
 
 			linkki_esaimaa.nouda(file(txt, 'w'))
+
+			print(nimi + ":\n" + "Kirjoitus onnistui")
+
+		elif nimi == "karjalainen":		
+
+			linkki_karjalainen.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
