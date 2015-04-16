@@ -40,6 +40,7 @@ import helsinginuutiset
 import esaimaa
 import kouvolansanomat
 import talouselama
+import iltamakasiini
 
 
 #Linkkien haku uutissivuilta
@@ -227,6 +228,10 @@ while a == False:
 
 		elif b == "talouselama":
 			talouselama.nouda(add, file(txt, 'w'))
+			print(b + ":\n" + "Kirjoitus onnistui")
+
+		elif b == "iltamakasiini":
+			iltamakasiini.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
 
 		else: 
