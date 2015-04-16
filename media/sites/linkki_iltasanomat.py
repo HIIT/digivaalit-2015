@@ -23,7 +23,7 @@ def nouda( out ):
 
 			a = teksti.find('a').get('href')
 
-			out.write(repr('http://www.iltasanomat.fi' + a) + "\n")
+			out.write('http://www.iltasanomat.fi' + a + "\n")
 		sivu = sivu + 20
 	
 if __name__ == '__main__':

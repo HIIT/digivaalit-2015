@@ -15,7 +15,7 @@ def nouda( out ):
 
 			a = teksti.find('a').get('href')
 
-			out.write(repr('http://www.esaimaa.fi' + a) + "\n")
+			out.write('http://www.esaimaa.fi' + a + "\n")
 	
 if __name__ == '__main__':
 	
