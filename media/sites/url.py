@@ -240,7 +240,7 @@ while a == False:
 
 	elif haku_num == 2:
 		print ("Sivut jotka toimii: \n")
-		print ("|Aamulehti|     |Ylilauta(kommentteja)|     |Iltasanomat|     |Satakunnankansa|\n|Etelasaimaa|   |Karjalainen|               |Kouvolansanomat| |Talouselama(ei toimi)|\n|Iltamakasiini|\n")
+		print ("|Aamulehti|     |Ylilauta(kommentteja)|     |Iltasanomat|     |Satakunnankansa|\n|Etelasaimaa|   |Karjalainen|               |Kouvolansanomat| |Talouselama|\n|Iltamakasiini|\n")
 
 		nimi = raw_input('Sivun nimi: ').lower()
 
