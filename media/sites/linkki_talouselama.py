@@ -11,12 +11,25 @@ def nouda( out ):
 		r.encoding = 'UTF-8'
 		soup = BeautifulSoup( r.text )
 
-		for teksti in soup.find_all( class_='article news' ):
-			for luokka in teksti.find_all(class_='media news'):
+		for teksti in soup.find_all( class_='article news first show-image ' ):
+			a = teksti.find('a').get('href')
 
-				a = luokka.find('a').get('href')
+			out.write(a + "\n")
 
-				out.write(a + "\n")
+		for teksti in soup.find_all( class_='article news show-image ' ):
+			a = teksti.find('a').get('href')
+
+			out.write(a + "\n")
+
+		for teksti in soup.find_all( class_='article news first ' ):
+			a = teksti.find('a').get('href')
+
+			out.write(a + "\n")
+
+		for teksti in soup.find_all( class_='article news ' ):
+			a = teksti.find('a').get('href')
+
+			out.write(a + "\n")
 	
 if __name__ == '__main__':
 	
