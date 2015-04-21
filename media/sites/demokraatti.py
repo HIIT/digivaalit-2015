@@ -11,9 +11,8 @@ def nouda( url , out ):
 	teksti = soup.find_all( class_='post-content' )
 
 	for string in teksti[0].stripped_strings:
-	        out.write(repr(string))
+	        out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
 
 	nouda("http://demokraatti.fi/sdpn-karna-maamme-ei-kesta-enaa-toista-samanlaista-paaministeria/", file('demokraatti.txt', 'w'))
-

@@ -12,9 +12,8 @@ def nouda( url , out ):
 		for p in teksti.find_all( 'p' ):
 
 			for string in p.stripped_strings:
-	        		out.write(repr(string))
+	        		out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
 
 	nouda("http://www.suomenmaa.fi/etusivu/7399391.html", file('suomenmaa.txt', 'w'))
-

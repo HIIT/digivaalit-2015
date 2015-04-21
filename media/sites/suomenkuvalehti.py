@@ -11,9 +11,8 @@ def nouda( url , out ):
 	teksti = soup.find_all( class_='article-body' )
 
 	for string in teksti[0].stripped_strings:
-	        out.write(repr(string))
+	        out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
 
 	nouda("http://suomenkuvalehti.fi/jutut/kotimaa/politiikka/timo-soini-aikoo-olla-puheenjohtaja-viela-vuoden-2019-vaaleissa/?shared=74287-e5d264da-500", file('suomenkuvalehti.txt', 'w'))
-

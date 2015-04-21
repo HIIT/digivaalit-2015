@@ -11,9 +11,8 @@ def nouda( url , out ):
 	teksti = soup.find_all( class_='article-text' )
 
 	for string in teksti[0].stripped_strings:
-	        out.write(repr(string))
+	        out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
-	
-	nouda("http://www.maaseuduntulevaisuus.fi/maatalous/nurmipelloille-voi-tulla-k%C3%A4ytt%C3%B6rajoituksia-1.76216", file('maaseudun.txt', 'w'))
 
+	nouda("http://www.maaseuduntulevaisuus.fi/maatalous/nurmipelloille-voi-tulla-k%C3%A4ytt%C3%B6rajoituksia-1.76216", file('maaseudun.txt', 'w'))

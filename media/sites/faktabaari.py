@@ -11,9 +11,8 @@ def nouda( url , out ):
 	teksti = soup.find_all( class_='entry-content' )
 
 	for string in teksti[0].stripped_strings:
-	        out.write(repr(string))
+	        out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
 
 	nouda("http://faktabaari.fi/fakta/petrus-pennanen-energiewende-oli-kaynnissa-jo-2002/", file('faktabaari.txt', 'w'))
-

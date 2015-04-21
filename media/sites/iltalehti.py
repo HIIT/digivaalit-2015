@@ -14,8 +14,8 @@ def nouda( url , out ):
 	for e in teksti[0]:
 		if isinstance( e, bs4.element.Tag):
 			if not e.get('id') and e.string and not e.get('type'): ## hack, fixme
-				out.write( repr( e.string ) )
+				out.write( e.string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
-	
-	nouda("http://www.iltalehti.fi/uutiset/2014120218885176_uu.shtml", file('ilta.txt', 'w'))
+
+	nouda("http://www.iltalehti.fi/uutiset/2014120218885176_uu.shtml", file('iltalehti.txt', 'w'))

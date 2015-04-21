@@ -12,9 +12,8 @@ def nouda( url , out ):
 		for p in teksti.find_all( 'p' ):
 
 			for string in p.stripped_strings:
-	        		out.write(repr(string))
+	        		out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
 
 	nouda("http://www.uusisuomi.fi/kotimaa/79148-ex-ministeri-kummastelee-jotkut-pitavat-lahes-rikollisena", file('uusisuomi.txt', 'w'))
-
