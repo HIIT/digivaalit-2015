@@ -2,7 +2,7 @@ import sys
 import os
 import re
 
-urlpat = r'((https?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
+urlpat = r'((http[s]?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
 
 links = sys.argv[1]
 links = open( links , 'r')
@@ -26,9 +26,13 @@ for link in links:
 
         ## load the current story
         loader.nouda( _link, out )
+        out.close()
 
-	print 'Downloaded', _link
+	print 'Downloaded', _link.strip()
 
     except:
 
         log.write( link )
+
+        print 'Failed', _link
+        print sys.exc_info()[0]
