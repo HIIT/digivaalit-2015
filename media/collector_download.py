@@ -1,5 +1,8 @@
 import sys
 import os
+import re
+
+urlpat = r'((https?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
 
 links = sys.argv[1]
 links = open( links , 'r')
@@ -18,11 +21,13 @@ for link in links:
 
         _link = _link[1]
         ## try to dynamically load the correct script using the domain name
-        loader = _link.split('.')[1]
+        loader = re.match( urlpat , _link ).group('domain')
         loader = structures = __import__( 'sites.' + loader, fromlist = [ loader ] )
 
         ## load the current story
         loader.nouda( _link, out )
+
+	print 'Downloaded', _link
 
     except:
 
