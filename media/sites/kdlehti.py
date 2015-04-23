@@ -5,6 +5,11 @@ from bs4 import BeautifulSoup
 def nouda( url , out ):
 
 	r = requests.get( url )
+
+	## seems that some content has been deleted
+	if r.status_code == 404:
+		return
+
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text )
 
