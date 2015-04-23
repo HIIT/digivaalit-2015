@@ -29,6 +29,12 @@ for link in links:
         if 'blogit.iltalehti.fi' in _link:
             loader = 'blogit_iltalehti'
 
+        ## special handler for ylex
+        if 'ylex' in _link:
+            loader = 'ylex'
+
+        print loader
+
         loader = structures = __import__( 'sites.' + loader, fromlist = [ loader ] )
 
         ## load the current story
