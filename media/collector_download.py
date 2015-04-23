@@ -24,6 +24,11 @@ for link in links:
         _link = _link[1]
         ## try to dynamically load the correct script using the domain name
         loader = re.match( urlpat , _link ).group('domain')
+
+        ## special exception: italehti blogs
+        if 'blogit.iltalehti.fi' in _link:
+            loader = 'blogit_iltalehti'
+
         loader = structures = __import__( 'sites.' + loader, fromlist = [ loader ] )
 
         ## load the current story
