@@ -13,6 +13,8 @@ log = open('log.txt', 'w')
 
 for link in links:
 
+    link = link.strip()
+
     try:
 
         ## link format: id, url
@@ -28,11 +30,6 @@ for link in links:
         loader.nouda( _link, out )
         out.close()
 
-	print 'Downloaded', _link.strip()
-
     except:
 
-        log.write( link )
-
-        print 'Failed', _link
-        print sys.exc_info()[0]
+        log.write( link + '\n')
