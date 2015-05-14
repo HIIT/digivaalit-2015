@@ -52,9 +52,7 @@ for row in range( 1 , input.nrows ):
 
     ## clean urls from data
     _reclean( candidate, 'twitter' , [ _clean_twitter , _clean_slash ], ['www.', 'http'] )
-    _reclean( candidate, 'facebook' , [ _clean_facebook , _clean_slash, _clean_refs ], ['www.', 'http'] )
-
-    print candidate['facebook']
+    _reclean( candidate, 'facebook' , [ _clean_facebook , _clean_refs ], ['www.', 'http'] )
 
     data.append( candidate )
 
