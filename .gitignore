@@ -1,9 +1,10 @@
-## don't submit keys
+## temp files
+.DS_Store
 
-./twitter/secrets.py
+## don't submit secrets
+secrets.py
 
 ## customs
-
 outputs/
 
 
