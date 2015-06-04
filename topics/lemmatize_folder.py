@@ -20,11 +20,10 @@ def lemmatize( text ):
 
     return lemma
 
-## folder usecase
-path = sys.argv[1]
-for file in os.listdir( path ):
+## read a file and lemmatize it
+def file( path ):
 
-    text = open( path + file )
+    text = open( path )
     text = text.readlines()
     text = map( lambda x: x.strip(), text )
     text = ' '.join( text )
@@ -34,3 +33,23 @@ for file in os.listdir( path ):
     fo = open( path + file + '.lemma', 'w' )
     fo.write( lemma )
     fo.close()
+
+## read every file in folder and fix based on that
+def folder( path ):
+
+    for file in os.listdir( path ):
+
+        file( path + file )
+
+if '__name__' == '__main__':
+
+    ## take as many parameters as needed
+    for item in sys.argv[1:]:
+
+        if( os.path.isdir( item ) ):
+
+            folder( item )
+
+        else:
+
+            file( item )
