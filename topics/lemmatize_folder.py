@@ -31,6 +31,6 @@ for file in os.listdir( path ):
 
     lemma = lemmatize( text )
 
-    fo = open( path + file + '.lemma' )
+    fo = open( path + file + '.lemma', 'w' )
     fo.write( lemma )
     fo.close()
