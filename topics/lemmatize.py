@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import os
 import sys
 import re
@@ -6,7 +8,7 @@ import subprocess
 def lemmatize( text ):
 
     text = text.decode('utf8')
-    text = re.sub( '[\.,?!:;]' , '' , text )
+    text = re.sub( '~[a-zA-Z0-9äöåÄÖÅ]' , ' ' , text,  re.UNICODE )
 
     out = subprocess.check_output( 'module load finnish-process; echo "' + text + '" | finnish-process', shell = True)
 
