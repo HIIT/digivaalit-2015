@@ -39,6 +39,10 @@ check_fitness <- function( dtm , k ) {
   library(topicmodels)
   library(Rmpfr)
 
+  burnin = 1000
+  iter = 1000
+  keep = 50
+
   model <- create_model( dtm , k )
   ll <- model@logLiks[ -c(1:(burnin/keep)) ]
 
