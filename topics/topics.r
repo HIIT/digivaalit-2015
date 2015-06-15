@@ -1,6 +1,5 @@
 create_dtm <- function( path ) {
 
-  library(topicmodels)
   library(tm)
 
   a <- Corpus( DirSource( path ) )
@@ -9,7 +8,6 @@ create_dtm <- function( path ) {
   a <- tm_map(a , stripWhitespace)
   a <- tm_map(a, removePunctuation)
   a <- tm_map(a, content_transformer(tolower) )
-  stopwords("finnish")
   a <- tm_map(a, removeWords, stopwords("finnish") )
   dtm <-DocumentTermMatrix(a)
 
@@ -17,8 +15,8 @@ create_dtm <- function( path ) {
   dtm.new   <- dtm[rowTotals> 0, ]
 
   ## save data for further use
-  save( dtm.new , dtm , file = paste( path , '.rdata', sep = '' ) )
-  return dtm.new
+  ## save( dtm.new , dtm , file = paste( path , '.rdata', sep = '' ) )
+  return( dtm.new )
 
 }
 
@@ -32,11 +30,11 @@ create_model <- function( dtm, k ) {
 
    model <- LDA( dtm , k = k, method = "Gibbs", control =  list(burnin = burnin, iter = iter, keep = keep) )
 
-   return model
+   return( model )
 
 }
 
-check_fittness <- function( dtm , k ) {
+check_fitness <- function( dtm , k ) {
 
   library(topicmodels)
   library(Rmpfr)
@@ -44,9 +42,10 @@ check_fittness <- function( dtm , k ) {
   model <- create_model( dtm , k )
   ll <- model@logLiks[ -c(1:(burnin/keep)) ]
 
-  precision = 2000L llMed <- median( ll )
+  precision = 2000L
+  llMed <- median( ll )
   ll = as.double( llMed - log( mean( exp( -mpfr(ll , prec = precision) + llMed ) ) ) )
 
-  return ll
+  return( ll )
 
 }
