@@ -1,6 +1,7 @@
 create_dtm <- function( path ) {
 
   library(tm)
+  library(Matrix)
 
   a <- Corpus( DirSource( path ) )
 
@@ -11,8 +12,9 @@ create_dtm <- function( path ) {
   a <- tm_map(a, removeWords, stopwords("finnish") )
   dtm <-DocumentTermMatrix(a)
 
-  rowTotals <- apply(dtm , 1, sum)
-  dtm.new   <- dtm[rowTotals> 0, ]
+  ## totals <- apply(dtm , 1, sum) ## wont work on large sparse matrix
+  totals <- sparseMatrix( dtm$i, dtm$j, x=dtm$v )
+  dtm.new <- dtm[ rowSums( totals ) > 0, ]
 
   ## save data for further use
   ## save( dtm.new , dtm , file = paste( path , '.rdata', sep = '' ) )
