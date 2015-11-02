@@ -9,7 +9,8 @@ def nouda( url , out ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text )
 
-	teksti = soup.find_all( id="article-text-content" )
+	teksti = soup.find_all( class_ ="article-text-content" )
+
 	for e in teksti[0]:
 		if isinstance( e, bs4.element.Tag):
 			if not e.get('class') and e.string:
