@@ -8,7 +8,7 @@ def nouda( url , out ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text )
 
-	teksti = soup.find_all( class_ ='post-meta' )
+	teksti = soup.find_all( class_ = 'news-excerpt' )
 
 	for string in teksti[0].stripped_strings:
 	        out.write( string.encode('utf8') + ' ' )
