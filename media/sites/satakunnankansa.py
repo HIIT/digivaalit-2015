@@ -1,6 +1,7 @@
 import requests
 
 from bs4 import BeautifulSoup
+import bs4
 
 def nouda( url , out ):
 
@@ -15,4 +16,4 @@ def nouda( url , out ):
 
 if __name__ == '__main__':
 
-	nouda("http://www.satakunnankansa.fi/Satakunta/1194944663801/artikkeli/miten+kay+vientiteollisuuteen+nojaavan+meriporin.html", file('satakunnan.txt', 'w'))
+	nouda("http://www.satakunnankansa.fi/Satakunta/1194972499877/artikkeli/myrsky+runteli+myos+vaalimainoksia.html", file('satakunnankansa.txt', 'w'))
