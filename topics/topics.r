@@ -15,7 +15,7 @@ create_dtm <- function( path ) {
   a <- tm_map(a, content_transformer(tolower) )
   a <- tm_map(a, removeWords, stopwords("finnish") )
 
-  dtm <-DocumentTermMatrix(a , control = list( bounds = list( global = c( minDocFreq, maxDocFreq ) ) )
+  dtm <-DocumentTermMatrix(a , control = list( bounds = list( global = c( minDocFreq, maxDocFreq ) ) ) )
 
   ## totals <- apply(dtm , 1, sum) ## wont work on large sparse matrix
   totals <- sparseMatrix( dtm$i, dtm$j, x=dtm$v )
