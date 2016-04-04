@@ -5,12 +5,17 @@ create_dtm <- function( path ) {
 
   a <- Corpus( DirSource( path ) )
 
+  ndocs <- length(a)
+  minDocFreq <- ndocs * 0.1 ## not common words enough
+  maxDocFreq <- ndocs * 0.8 ## too commong words
+
   a <- tm_map(a, removeNumbers)
   a <- tm_map(a , stripWhitespace)
   a <- tm_map(a, removePunctuation)
   a <- tm_map(a, content_transformer(tolower) )
   a <- tm_map(a, removeWords, stopwords("finnish") )
-  dtm <-DocumentTermMatrix(a)
+
+  dtm <-DocumentTermMatrix(a , control = list( bounds = list( global = c( minDocFreq, maxDocFreq ) ) )
 
   ## totals <- apply(dtm , 1, sum) ## wont work on large sparse matrix
   totals <- sparseMatrix( dtm$i, dtm$j, x=dtm$v )
@@ -66,7 +71,7 @@ visualize_topicmodel <- function(fitted, corpus, doc_term){
     library(stringi)
     library(tm)
     library(LDAvis)
- 
+
     # Find required quantities
     phi <- posterior(fitted)$terms %>% as.matrix
     theta <- posterior(fitted)$topics %>% as.matrix
@@ -80,12 +85,12 @@ visualize_topicmodel <- function(fitted, corpus, doc_term){
     freq_matrix <- data.frame(ST = colnames(temp_frequency),
                               Freq = colSums(temp_frequency))
     rm(temp_frequency)
- 
+
     # Convert to json
     json_lda <- LDAvis::createJSON(phi = phi, theta = theta,
                             vocab = vocab,
                             doc.length = doc_length,
                             term.frequency = freq_matrix$Freq)
- 
+
     return(json_lda)
 }
