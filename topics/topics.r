@@ -32,7 +32,7 @@ create_dtm <- function( path ) {
   dtm2 = DocumentTermMatrix( a , control = list( bounds = list( global = c( lower, upper ) ) ) )
 
   ## throw away columns with 0 indicators
-  dtm3 <- dtm2[ row_sums( totals ) > 0, ]
+  dtm3 <- dtm2[ row_sums( dtm2 ) > 0, ]
 
   return( dtm3 )
 
