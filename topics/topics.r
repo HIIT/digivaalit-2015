@@ -16,16 +16,28 @@ create_dtm <- function( path ) {
   ## transform back to plaintext documents
   a <- tm_map(a, PlainTextDocument)
 
-  ## compute document-term
+  ## compute word frequencies
   dtm <-DocumentTermMatrix(a) ## , control = list( bounds = list( global = c( minDocFreq, maxDocFreq ) ) ) )
 
-  ## totals <- apply(dtm , 1, sum) ## wont work on large sparse matrix
-  totals <- sparseMatrix( dtm$i, dtm$j, x=dtm$v )
-  dtm.new <- dtm[ rowSums( totals ) > 0, ]
+  dtm <- as.matrix(dtm)
+  frequency <- colSums(dtm)
+  frequency <- sort(frequency, decreasing=TRUE)
 
-  ## save data for further use
-  ## save( dtm.new , dtm , file = paste( path , '.rdata', sep = '' ) )
-  return( dtm.new )
+  upper = floor( length( frequency ) * .005 )
+  lower = floor( length( frequency) * .75 )
+  upper = frequency[ upper ]
+  lower = frequency[ lower ]
+  upper = as.integer( upper )
+  lower = as.integer( lower ) + 1
+
+  dtm2 = DocumentTermMatrix( a , control = list( bounds = list( global = c( lower, upper ) ) ) )
+
+  ## throw away columns with 0 indicators
+  ## totals <- apply(dtm , 1, sum) ## wont work on large sparse matrix
+  totals <- sparseMatrix( dtm2$i, dtm2$j, x=dtm2$v )
+  dtm3 <- dtm2[ rowSums( totals ) > 0, ]
+
+  return( dtm3 )
 
 }
 
