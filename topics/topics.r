@@ -1,7 +1,7 @@
 create_dtm <- function( path ) {
 
   library(tm)
-  library(Matrix)
+  library(slam)
 
   a <- Corpus( DirSource( path, encoding = "UTF-8" ) )
 
@@ -19,8 +19,7 @@ create_dtm <- function( path ) {
   ## compute word frequencies
   dtm <-DocumentTermMatrix(a) ## , control = list( bounds = list( global = c( minDocFreq, maxDocFreq ) ) ) )
 
-  dtm <- as.matrix(dtm)
-  frequency <- colSums(dtm)
+  frequency <- col_sums( dtm , na.rm = T )
   frequency <- sort(frequency, decreasing=TRUE)
 
   upper = floor( length( frequency ) * .005 )
@@ -33,9 +32,7 @@ create_dtm <- function( path ) {
   dtm2 = DocumentTermMatrix( a , control = list( bounds = list( global = c( lower, upper ) ) ) )
 
   ## throw away columns with 0 indicators
-  ## totals <- apply(dtm , 1, sum) ## wont work on large sparse matrix
-  totals <- sparseMatrix( dtm2$i, dtm2$j, x=dtm2$v )
-  dtm3 <- dtm2[ rowSums( totals ) > 0, ]
+  dtm3 <- dtm2[ row_sums( totals ) > 0, ]
 
   return( dtm3 )
 
