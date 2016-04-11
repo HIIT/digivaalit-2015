@@ -3,19 +3,21 @@ create_dtm <- function( path ) {
   library(tm)
   library(Matrix)
 
-  a <- Corpus( DirSource( path ) )
+  a <- Corpus( DirSource( path, encoding = "UTF-8" ) )
 
-  ndocs <- length(a)
-  minDocFreq <- ndocs * 0.1 ## not common words enough
-  maxDocFreq <- ndocs * 0.8 ## too commong words
+  ## bunch of cleanup and transformations
+  a <- tm_map(a, removeNumbers, mc.cores=1 )
+  a <- tm_map(a, stripWhitespace, mc.cores=1 )
+  a <- tm_map(a, removePunctuation, mc.cores=1 )
+  a <- tm_map(a, tolower, mc.cores=1 )
+  a <- tm_map(a, function(x) iconv(x, to='UTF-8', sub='byte'), mc.cores=1 )
+  a <- tm_map(a, removeWords, stopwords("finnish"), mc.cores=1 )
 
-  a <- tm_map(a, removeNumbers)
-  a <- tm_map(a , stripWhitespace)
-  a <- tm_map(a, removePunctuation)
-  a <- tm_map(a, content_transformer(tolower) )
-  a <- tm_map(a, removeWords, stopwords("finnish") )
+  ## transform back to plaintext documents
+  a <- tm_map(a, PlainTextDocument)
 
-  dtm <-DocumentTermMatrix(a , control = list( bounds = list( global = c( minDocFreq, maxDocFreq ) ) ) )
+  ## compute document-term
+  dtm <-DocumentTermMatrix(a) ## , control = list( bounds = list( global = c( minDocFreq, maxDocFreq ) ) ) )
 
   ## totals <- apply(dtm , 1, sum) ## wont work on large sparse matrix
   totals <- sparseMatrix( dtm$i, dtm$j, x=dtm$v )
