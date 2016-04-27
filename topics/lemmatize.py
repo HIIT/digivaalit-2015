@@ -46,7 +46,24 @@ def folder( path ):
 
         file( path + '/' + f )
 
+
+def serial( path , index ):
+
+   files = os.listdir( path )
+   files = map( int , files )
+
+   files = filter( lambda x: x % 200 == index , files )
+
+   for f in files:
+       file( path + '/' + f )
+
 if __name__ == '__main__':
+
+    if sys.argv[1] == 'serial': ## conduct serial lemma
+
+        for path in sys.argv[3:]:
+
+           serial( path , int( sys.argv[2] ) )
 
     ## take as many parameters as needed
     for item in sys.argv[1:]:
