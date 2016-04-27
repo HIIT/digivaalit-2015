@@ -50,9 +50,14 @@ def folder( path ):
 def serial( path , index ):
 
    files = os.listdir( path )
+
+   files = filter( lambda x: '.lemma' not in x, files )
+
    files = map( int , files )
 
    files = filter( lambda x: x % 200 == index , files )
+
+   files = map( str , files )
 
    for f in files:
        file( path + '/' + f )
