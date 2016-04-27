@@ -9,6 +9,7 @@ def lemmatize( text ):
 
     text = text.decode('utf8')
     text = re.sub( u'[^a-zA-ZöäåÖÄÅ0-1#@]' , ' ' , text,  re.UNICODE )
+    text = text.replace('"', '' ) ## no "
 
     out = subprocess.check_output( 'module load finnish-process; echo "' + text + '" | finnish-process', shell = True)
 
@@ -32,18 +33,20 @@ def file( path ):
 
     lemma = lemmatize( text )
 
-    fo = open( path + file + '.lemma', 'w' )
+    fo = open( path + '.lemma', 'w' )
     fo.write( lemma )
     fo.close()
 
 ## read every file in folder and fix based on that
 def folder( path ):
 
-    for file in os.listdir( path ):
+    for f in os.listdir( path ):
 
-        file( path + file )
+        print path + '/' + f
 
-if '__name__' == '__main__':
+        file( path + '/' + f )
+
+if __name__ == '__main__':
 
     ## take as many parameters as needed
     for item in sys.argv[1:]:
