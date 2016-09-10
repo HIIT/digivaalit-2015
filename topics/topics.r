@@ -1,17 +1,16 @@
 create_dtm <- function( path ) {
 
   library(tm)
-  library(slam)
 
   a <- Corpus( DirSource( path, encoding = "UTF-8" ) )
 
   ## bunch of cleanup and transformations
-  a <- tm_map(a, removeNumbers, mc.cores=1 )
-  a <- tm_map(a, stripWhitespace, mc.cores=1 )
-  a <- tm_map(a, removePunctuation, mc.cores=1 )
-  a <- tm_map(a, tolower, mc.cores=1 )
-  a <- tm_map(a, function(x) iconv(x, to='UTF-8', sub='byte'), mc.cores=1 )
-  a <- tm_map(a, removeWords, stopwords("finnish"), mc.cores=1 )
+  a <- tm_map(a, removeNumbers )
+  a <- tm_map(a, stripWhitespace )
+  a <- tm_map(a, removePunctuation )
+  a <- tm_map(a, tolower )
+  a <- tm_map(a, function(x) iconv(x, to='UTF-8', sub='byte') )
+  a <- tm_map(a, removeWords, stopwords("finnish") )
 
   ## transform back to plaintext documents
   a <- tm_map(a, PlainTextDocument)
