@@ -1,14 +1,11 @@
-source('~/digivaalit_public/topics/topics.r')
+source('topics.r')
 
-paths <- c( 'citizen-tweets-lemma' , 'digivaalit-media-lemmas', 'candidate-tweets-lemma' )
-
-for( path in paths ) {
-
-   path = paste( '/homeappl/home/mnelimar/' , path, '/',  sep = '' )
+for( path in commandArgs(trailingOnly=TRUE) ) {
 
    print( paste( "Working on" , path ) )
 
-   unlink( paste( path , '*.rdata*', sep = '' ) )
+   unlink( paste( path , '*.rdata*', sep = '' ) ) ## remove all existing rdata in the folder
+
    dtm <- create_dtm( path )
    save( dtm , file = paste( path, 'dtm.rdata' , sep = '' ) )
 
