@@ -4,7 +4,6 @@ create_dtm <- function( path ) {
 
   a <- Corpus( DirSource( path, encoding = "UTF-8" ) )
 
-
   stop <- scan('stop.txt', what = list(""), sep = '\n' )
   stop <- c( stopwords("finnish") , stop , recursive=T )
 
@@ -17,13 +16,15 @@ create_dtm <- function( path ) {
   a <- tm_map(a, removeWords, stop, mc.cores=1 )
 
   ## compute word frequencies
-  dtm <-DocumentTermMatrix(a) ## , control = list( bounds = list( global = c( minDocFreq, maxDocFreq ) ) ) )
+  dtm <-DocumentTermMatrix(a)
 
   frequency <- col_sums( dtm , na.rm = T )
   frequency <- sort(frequency, decreasing=TRUE)
 
+  ## choose removal boundaries for further data analysis
+
   upper = Inf ## floor( length( frequency ) * .005 )
-  lower = floor( length( frequency) * .80 )
+  lower = floor( length( frequency) * .95 )
   ## upper = frequency[ upper ]
   lower = frequency[ lower ]
   ## upper = as.integer( upper )
