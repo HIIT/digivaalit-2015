@@ -16,9 +16,6 @@ create_dtm <- function( path ) {
   a <- tm_map(a, function(x) iconv(x, to='UTF-8', sub='byte'), mc.cores=1 )
   a <- tm_map(a, removeWords, stop, mc.cores=1 )
 
-  ## transform back to plaintext documents
-  a <- tm_map(a, PlainTextDocument)
-
   ## compute word frequencies
   dtm <-DocumentTermMatrix(a) ## , control = list( bounds = list( global = c( minDocFreq, maxDocFreq ) ) ) )
 
