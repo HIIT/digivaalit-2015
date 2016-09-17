@@ -5,13 +5,17 @@ create_dtm <- function( path ) {
 
   a <- Corpus( DirSource( path, encoding = "UTF-8" ) )
 
+
+  stop <- scan('stop.txt', what = list(""), sep = '\n' )
+  stop <- c( stopwords("finnish") , stop , recursive=T )
+
   ## bunch of cleanup and transformations
   a <- tm_map(a, removeNumbers, mc.cores=1 )
   a <- tm_map(a, stripWhitespace, mc.cores=1 )
   a <- tm_map(a, removePunctuation, mc.cores=1 )
   a <- tm_map(a, tolower, mc.cores=1 )
   a <- tm_map(a, function(x) iconv(x, to='UTF-8', sub='byte'), mc.cores=1 )
-  a <- tm_map(a, removeWords, stopwords("finnish"), mc.cores=1 )
+  a <- tm_map(a, removeWords, stop, mc.cores=1 )
 
   ## transform back to plaintext documents
   a <- tm_map(a, PlainTextDocument)
@@ -22,11 +26,11 @@ create_dtm <- function( path ) {
   frequency <- col_sums( dtm , na.rm = T )
   frequency <- sort(frequency, decreasing=TRUE)
 
-  upper = floor( length( frequency ) * .005 )
-  lower = floor( length( frequency) * .75 )
-  upper = frequency[ upper ]
+  upper = Inf ## floor( length( frequency ) * .005 )
+  lower = floor( length( frequency) * .80 )
+  ## upper = frequency[ upper ]
   lower = frequency[ lower ]
-  upper = as.integer( upper )
+  ## upper = as.integer( upper )
   lower = as.integer( lower ) + 1
 
   dtm2 = DocumentTermMatrix( a , control = list( bounds = list( global = c( lower, upper ) ) ) )
