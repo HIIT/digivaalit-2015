@@ -1,7 +1,6 @@
 create_dtm <- function( path ) {
 
   library(tm)
-  library(slam)
 
   a <- Corpus( DirSource( path, encoding = "UTF-8" ) )
 
