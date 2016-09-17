@@ -1,6 +1,7 @@
 create_dtm <- function( path ) {
 
   library(tm)
+  library(slam)
 
   a <- Corpus( DirSource( path, encoding = "UTF-8" ) )
 
@@ -11,9 +12,8 @@ create_dtm <- function( path ) {
   a <- tm_map(a, removeNumbers, mc.cores=1 )
   a <- tm_map(a, stripWhitespace, mc.cores=1 )
   a <- tm_map(a, removePunctuation, mc.cores=1 )
-  a <- tm_map(a, tolower, mc.cores=1 )
-  a <- tm_map(a, function(x) iconv(x, to='UTF-8', sub='byte'), mc.cores=1 )
-  a <- tm_map(a, removeWords, stop, mc.cores=1 )
+  a <- tm_map(a, content_transformer(tolower), mc.cores=1 )
+  a <- tm_map(a, removeWords, stop )
 
   ## compute word frequencies
   dtm <-DocumentTermMatrix(a)
