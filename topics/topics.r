@@ -73,6 +73,25 @@ check_fitness <- function( dtm , k ) {
 
 }
 
+check_fitness_model <- function( model ) {
+
+  library(topicmodels)
+  library(Rmpfr)
+
+  burnin = 1000
+  iter = 1000
+  keep = 50
+
+  ll <- model@logLiks[ -c(1:(burnin/keep)) ]
+
+  precision = 2000L
+  llMed <- median( ll )
+  ll = as.double( llMed - log( mean( exp( -mpfr(ll , prec = precision) + llMed ) ) ) )
+
+  return( ll )
+
+}
+
 
 ## from http://www.r-bloggers.com/a-link-between-topicmodels-lda-and-ldavis/
 
