@@ -1,12 +1,24 @@
 source('topics.r')
 
-print( commandArgs(trailingOnly=TRUE) )
+library("argparser")
 
-for( path in commandArgs(trailingOnly=TRUE) ) {
+p <- arg_parser("Find the best fit of a topic model thing")
+
+p <- add_argument(p, "--plot", help="create a plot", flag=TRUE)
+p <- add_argument(p, "--method", help="choose method in use", default = "logll")
+p <- add_argument(p, "folder", help="folders to analyse")
+
+args <- parse_args( p )
+
+print( args$method )
+
+##for( path in commandArgs(trailingOnly=TRUE) ) {
 
   df = data.frame( k = integer(), ll =integer() )
 
-  for( f in list.files(path , pattern = '*.rdata') ){
+  path <- args$folder;
+
+  for( f in list.files( path, pattern = '*.rdata') ){
   	load( paste(path, f, sep = '') )
   	k <- model@k
   	ll <- check_fitness_ll( model )
@@ -24,16 +36,18 @@ for( path in commandArgs(trailingOnly=TRUE) ) {
   print( df$ll[ which.max( df$ll ) ] )
   print("") ## Empty line
 
-  ## plot findings
+  if( args$plot ) {
 
-  library('ggplot2')
+    library('ggplot2')
 
-  g <- ggplot( df , aes(k , ll ) ) +
-  geom_line() +
-  xlab('Aiheiden määrä') + ylab('Loglikelihood') +
-  theme_minimal() +
-  xlim(10,30)
+    g <- ggplot( df , aes(k , ll ) ) +
+    geom_line() +
+    xlab('Aiheiden määrä') + ylab('Loglikelihood') +
+    theme_minimal() +
+    xlim(10,30) ## TODO: make args
 
-  ggsave( file = 'plot.pdf' , g)
+    ggsave( file = 'plot.pdf' , g)
 
-}
+  }
+
+##}
