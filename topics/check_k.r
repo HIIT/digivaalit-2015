@@ -9,7 +9,7 @@ for( path in commandArgs(trailingOnly=TRUE) ) {
   for( f in list.files(path , pattern = '*.rdata') ){
   	load( paste(path, f, sep = '') )
   	k <- model@k
-  	ll <- check_fitness_model( model )
+  	ll <- check_fitness_ll( model )
   	row = c(k, ll)
   	df[ nrow(df)+1,] <- row
   }
