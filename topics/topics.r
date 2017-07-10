@@ -3,7 +3,7 @@ create_dtm <- function( path ) {
   library(tm)
   library(slam)
 
-  a <- Corpus( DirSource( path, encoding = "UTF-8" ) )
+  a <- Corpus( DirSource( path, encoding = "UTF-8", recursive = T ) )
 
   stop <- scan('stop.txt', what = list(""), sep = '\n' )
   stop <- c( stopwords("finnish") , stop , recursive=T )
@@ -16,32 +16,37 @@ create_dtm <- function( path ) {
   a <- tm_map(a, removeWords, stop )
 
   ## compute word frequencies
-  dtm <-DocumentTermMatrix(a)
+  dtm1 <-DocumentTermMatrix(a)
 
-  frequency <- col_sums( dtm , na.rm = T )
-  frequency <- sort(frequency, decreasing=TRUE)
+  #frequency <- col_sums( dtm , na.rm = T )
+  #frequency <- sort(frequency, decreasing=TRUE)
 
   ## choose removal boundaries for further data analysis
 
-  upper = Inf ## floor( length( frequency ) * .005 )
-  lower = floor( length( frequency) * .95 )
+  #upper = Inf ## floor( length( frequency ) * .005 )
+  #lower = floor( length( frequency) * .95 )
   ## upper = frequency[ upper ]
-  lower = frequency[ lower ]
+  #lower = frequency[ lower ]
   ## upper = as.integer( upper )
-  lower = as.integer( lower ) + 1
+  #lower = as.integer( lower ) + 1
 
-  dtm2 = DocumentTermMatrix( a , control = list( bounds = list( global = c( lower, upper ) ) ) )
+  ## dtm2 = DocumentTermMatrix( a , control = list( bounds = list( global = c( lower, upper ) ) ) )
 
   ## throw away columns with 0 indicators
-  dtm3 <- dtm2[ row_sums( dtm2 ) > 0, ]
+  dtm3 <- dtm1[ row_sums( dtm1 ) > 0, ]
 
-  return( dtm3 )
+  dtm <- dtm1
+
+  return( dtm )
 
 }
 
 create_model <- function( dtm, k ) {
 
    library(topicmodels)
+
+   ## fix randomness
+   set.seed( 1 )
 
    burnin = 1000
    iter = 1000
@@ -73,6 +78,27 @@ check_fitness <- function( dtm , k ) {
 
 }
 
+
+check_fitness_model <- function( model ) {
+
+  library(topicmodels)
+  library(Rmpfr)
+
+  burnin = 1000
+  iter = 1000
+  keep = 50
+
+  k <- model@k
+
+  ll <- model@logLiks[ -c(1:(burnin/keep)) ]
+
+  precision = 2000L
+  llMed <- median( ll )
+  ll = as.double( llMed - log( mean( exp( -mpfr(ll , prec = precision) + llMed ) ) ) )
+
+  return( ll )
+
+}
 
 ## from http://www.r-bloggers.com/a-link-between-topicmodels-lda-and-ldavis/
 
