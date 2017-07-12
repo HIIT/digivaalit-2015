@@ -28,7 +28,7 @@ def tweets( ids ):
         t = None
         while not t:
             try:
-                t = twitter._statuses_lookup( _ids )
+                t = twitter._statuses_lookup( _ids, tweet_mode='extended' ) ## extended gets the full tweet text if truncated
                 t = map( lambda x: x._json , t )
             except tweepy.error.TweepError:
                 time.sleep( 60 * 15 ) ## wait for ratelimit to come back
