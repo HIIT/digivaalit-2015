@@ -5,8 +5,9 @@ create_dtm <- function( path ) {
 
   a <- Corpus( DirSource( path, encoding = "UTF-8", recursive = T ) )
 
-  stop <- scan('stop.txt', what = list(""), sep = '\n' )
-  stop <- c( stopwords("finnish") , stop , recursive=T )
+  stop1 <- scan('stop_generic.txt', what = list(""), sep = '\n' )
+  stop2 <- scan('stop_digivaalit.txt', what = list(""), sep = '\n' )
+  stop <- c( stopwords("finnish") , stop1, stop2 , recursive=T )
 
   ## bunch of cleanup and transformations
   a <- tm_map(a, removeNumbers, mc.cores=1 )
@@ -18,24 +19,27 @@ create_dtm <- function( path ) {
   ## compute word frequencies
   dtm1 <-DocumentTermMatrix(a)
 
-  #frequency <- col_sums( dtm , na.rm = T )
-  #frequency <- sort(frequency, decreasing=TRUE)
+  frequency <- col_sums( dtm1 , na.rm = T )
+  frequency <- sort(frequency, decreasing=TRUE)
 
   ## choose removal boundaries for further data analysis
 
-  #upper = Inf ## floor( length( frequency ) * .005 )
-  #lower = floor( length( frequency) * .95 )
-  ## upper = frequency[ upper ]
-  #lower = frequency[ lower ]
-  ## upper = as.integer( upper )
-  #lower = as.integer( lower ) + 1
+  upper = floor( length( frequency ) * .001 )
+  ##upper = Inf
+  lower = floor( length( frequency) * .9 )
+  
+  upper = frequency[ upper ]
+  lower = frequency[ lower ]
+  
+  upper = as.integer( upper )
+  lower = as.integer( lower ) + 1
 
-  ## dtm2 = DocumentTermMatrix( a , control = list( bounds = list( global = c( lower, upper ) ) ) )
+  dtm2 = DocumentTermMatrix( a , control = list( bounds = list( global = c( lower, upper ) ) ) )
 
   ## throw away columns with 0 indicators
-  dtm3 <- dtm1[ row_sums( dtm1 ) > 0, ]
+  dtm3 <- dtm2[ row_sums( dtm2 ) > 0, ]
 
-  dtm <- dtm1
+  dtm <- dtm3
 
   return( dtm )
 
