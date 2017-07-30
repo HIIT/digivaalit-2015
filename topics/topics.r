@@ -3,10 +3,11 @@ create_dtm <- function( path ) {
   library(tm)
   library(slam)
 
-  a <- Corpus( DirSource( path, encoding = "UTF-8" ) )
+  a <- Corpus( DirSource( path, encoding = "UTF-8", recursive = T ) )
 
-  stop <- scan('stop.txt', what = list(""), sep = '\n' )
-  stop <- c( stopwords("finnish") , stop , recursive=T )
+  stop1 <- scan('stop_generic.txt', what = list(""), sep = '\n' )
+  stop2 <- scan('stop_digivaalit.txt', what = list(""), sep = '\n' )
+  stop <- c( stopwords("finnish") , stop1, stop2 , recursive=T )
 
   ## bunch of cleanup and transformations
   a <- tm_map(a, removeNumbers, mc.cores=1 )
@@ -16,18 +17,21 @@ create_dtm <- function( path ) {
   a <- tm_map(a, removeWords, stop )
 
   ## compute word frequencies
-  dtm <-DocumentTermMatrix(a)
+  dtm1 <-DocumentTermMatrix(a)
 
-  frequency <- col_sums( dtm , na.rm = T )
+  frequency <- col_sums( dtm1 , na.rm = T )
   frequency <- sort(frequency, decreasing=TRUE)
 
   ## choose removal boundaries for further data analysis
 
-  upper = Inf ## floor( length( frequency ) * .005 )
-  lower = floor( length( frequency) * .95 )
-  ## upper = frequency[ upper ]
+  upper = floor( length( frequency ) * .001 )
+  ##upper = Inf
+  lower = floor( length( frequency) * .9 )
+  
+  upper = frequency[ upper ]
   lower = frequency[ lower ]
-  ## upper = as.integer( upper )
+  
+  upper = as.integer( upper )
   lower = as.integer( lower ) + 1
 
   dtm2 = DocumentTermMatrix( a , control = list( bounds = list( global = c( lower, upper ) ) ) )
@@ -35,13 +39,18 @@ create_dtm <- function( path ) {
   ## throw away columns with 0 indicators
   dtm3 <- dtm2[ row_sums( dtm2 ) > 0, ]
 
-  return( dtm3 )
+  dtm <- dtm3
+
+  return( dtm )
 
 }
 
 create_model <- function( dtm, k ) {
 
    library(topicmodels)
+
+   ## fix randomness
+   set.seed( 1 )
 
    burnin = 1000
    iter = 1000
@@ -74,6 +83,27 @@ check_fitness_ll <- function( model ) {
 
 }
 
+
+check_fitness_model <- function( model ) {
+
+  library(topicmodels)
+  library(Rmpfr)
+
+  burnin = 1000
+  iter = 1000
+  keep = 50
+
+  k <- model@k
+
+  ll <- model@logLiks[ -c(1:(burnin/keep)) ]
+
+  precision = 2000L
+  llMed <- median( ll )
+  ll = as.double( llMed - log( mean( exp( -mpfr(ll , prec = precision) + llMed ) ) ) )
+
+  return( ll )
+
+}
 
 ## from http://www.r-bloggers.com/a-link-between-topicmodels-lda-and-ldavis/
 
