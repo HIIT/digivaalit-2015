@@ -1,0 +1,19 @@
+#!/bin/bash -l
+
+#SBATCH -J topicmodel
+#SBATCH -o %A_%a.log
+#SBATCH -e %A_%a.err.log
+
+#SBATCH --constraint="snb|hsw"
+#SBATCH -p serial
+#SBATCH --array=2-300
+
+#SBATCH -n 1
+#SBATCH -c 1
+#SBATCH -t 24:00:00 ## näitä kahta joutuu yleensä vääntämään riippuen datan määrästä
+#SBATCH --mem-per-cpu=10000
+
+module load r-env
+srun R -f create_topics.r --args folder/to/dtm "$SLURM_ARRAY_TASK_ID"
+
+used_slurm_resources.bash
