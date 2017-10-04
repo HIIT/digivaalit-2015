@@ -6,7 +6,8 @@ create_dtm <- function( path ) {
   a <- Corpus( DirSource( path, encoding = "UTF-8", recursive = T ) )
 
   stop1 <- scan('stop_generic.txt', what = list(""), sep = '\n' )
-  stop2 <- scan('stop_digivaalit.txt', what = list(""), sep = '\n' )
+  stop2 <- c()
+##  stop2 <- scan('stop_digivaalit.txt', what = list(""), sep = '\n' )
   stop <- c( stopwords("finnish") , stop1, stop2 , recursive=T )
 
   ## bunch of cleanup and transformations

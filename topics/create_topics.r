@@ -1,4 +1,5 @@
 source('topics.r')
+##source('stm.r')
 
 args <- commandArgs(trailingOnly = TRUE)
 
